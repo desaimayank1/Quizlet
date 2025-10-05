@@ -10,6 +10,7 @@ app.use(cors({
    origin:"*"
 }))
 app.use(express.json());
+app.use('/test/submit', express.text({ type: '*/*' }));
 
 app.get("/", (req:Request, res:Response) => {
     res.status(200).json({success:true,message:"Server running on localhost:3000..."})

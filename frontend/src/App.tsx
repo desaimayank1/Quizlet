@@ -4,12 +4,13 @@ import { StartPage } from './components/StartPage';
 import { QuizPage } from './components/QuizPage';
 import { ResultPage } from './components/ResultPage';
 import { AnalysisPage } from './components/AnalysisPage';
+import { Protected } from './components/Protected';
 
 const router = createBrowserRouter([
   { path: "/", element: <StartPage /> },
-  { path: "/quiz", element: <QuizPage /> },
-  { path: "/result", element: <ResultPage /> },
-  { path: "/analysis", element: <AnalysisPage /> },
+  { path: "/quiz", element:<Protected><QuizPage /></Protected>  },
+  { path: "/result", element: <Protected><ResultPage /></Protected> },
+  { path: "/analysis", element:<Protected><AnalysisPage /></Protected>  },
 ]);
 
 

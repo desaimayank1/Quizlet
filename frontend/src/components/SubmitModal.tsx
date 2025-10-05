@@ -1,13 +1,15 @@
 import React from 'react';
-import { useQuestionStore, useTestStore } from '../store/useTestStore';
+import { useQuestionStore, useTestStore, useUserStore } from '../store/useTestStore';
+import { useNavigate } from 'react-router-dom';
+import { confirmSubmit } from '../lib/utils';
 
 export const SubmitModal: React.FC = () => {
-  const { questions } = useQuestionStore()
-  const { answers, setShowSubmitModal } = useTestStore()
+  const { questions, setScore, setQuestions } = useQuestionStore()
+  const { userId } = useUserStore()
+  const { answers, setShowSubmitModal ,setTimeLeft} = useTestStore()
+  const navigate = useNavigate();
 
-  const confirmSubmit = () => {
-    setShowSubmitModal(false);
-  };
+  const handleSubmit = () => confirmSubmit(userId,answers,setScore,questions,setQuestions,setShowSubmitModal,setTimeLeft,navigate,)
 
   const attemptedCount = (): number => {
     return Object.keys(answers).length;
@@ -61,7 +63,7 @@ export const SubmitModal: React.FC = () => {
             Review Answers
           </button>
           <button
-            onClick={confirmSubmit}
+            onClick={handleSubmit}
             className="flex-1 px-4 sm:px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 text-sm sm:text-base"
           >
             Confirm Submit
