@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+/* subtle dot grid */
+body {
+  background-color: #F9FAFB;
+  background-image: radial-gradient(#E5E7EB 1px, transparent 1px);
+  background-size: 20px 20px;
+}
