@@ -4,7 +4,7 @@ import { useQuestionStore, useUserStore, useTestStore } from '../store/useTestSt
 import { SubmitModal } from './SubmitModal';
 import { confirmSubmit } from '../lib/utils';
 import { useNavigate } from 'react-router-dom';
-
+const BACKEND_URL= import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 export const QuizPage: React.FC = () => {
   const { questions, setQuestions, setScore } = useQuestionStore()
@@ -30,7 +30,7 @@ export const QuizPage: React.FC = () => {
     const handleBeforeUnload = () => {
       const user = { id: userId }
       const payload = JSON.stringify({ user, answers });
-      navigator.sendBeacon("http://localhost:3000/test/submit", payload);
+      navigator.sendBeacon(`${BACKEND_URL}/test/submit`, payload);
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);

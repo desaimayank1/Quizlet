@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { handleRetake } from '../lib/utils';
 
+const BACKEND_URL= import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 export const StartPage: React.FC = () => {
     const { userEmail, userName, setUserEmail, setUserName,setUserId } = useUserStore();
     const { setQuestions,setScore ,score,questions} = useQuestionStore()
@@ -15,7 +17,7 @@ export const StartPage: React.FC = () => {
     const handleSubmit = async () => {
         if (userEmail && userName) {
             try {
-                const response = await axios.get("http://localhost:3000/test/user-info", {
+                const response = await axios.get(`${BACKEND_URL}/test/user-info`, {
                     params: {
                         email: userEmail,
                         name: userName,

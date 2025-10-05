@@ -1,6 +1,7 @@
 // lib/utils.ts
 import axios from "axios";
 import type { Answers, Question } from "../types/data-types";
+const BACKEND_URL= import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 export const handleRetake = async (
   userEmail: string,
@@ -9,7 +10,7 @@ export const handleRetake = async (
   resetAnswers:()=>void
 ) => {
   try {
-    const response = await axios.get("http://localhost:3000/test/retake", {
+    const response = await axios.get(`${BACKEND_URL}/test/retake`, {
       params: { email: userEmail, name: userName },
     });
 
@@ -37,7 +38,7 @@ export const confirmSubmit = async (
       id: userId
     }
 
-    const response = await axios.post("http://localhost:3000/test/submit", {
+    const response = await axios.post(`${BACKEND_URL}/test/submit`, {
       user,
       answers
     });
