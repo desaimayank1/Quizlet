@@ -1,14 +1,16 @@
 import React from 'react';
 import { CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useQuestionStore,useTestStore } from '../store/useTestStore';
+import { useQuestionStore,useTestStore,useUserStore } from '../store/useTestStore';
 import { handleRetake } from '../lib/utils';
 
 
 export const AnalysisPage: React.FC = () => {
   const {questions} =useQuestionStore()
-  const {answers} =useTestStore()
+  const {userEmail,userName} =useUserStore()
+  const {answers,resetAnswers} =useTestStore()
   const navigate=useNavigate()
+  const onRetake=()=> handleRetake(userEmail, userName, navigate,resetAnswers)
   return (
     <div className="min-h-screen bg-gray-50 p-3 sm:p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
@@ -97,10 +99,10 @@ export const AnalysisPage: React.FC = () => {
             Back to Results
           </button>
           <button
-            onClick={handleRetake}
+            onClick={onRetake}
             className="flex-1 bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 text-sm sm:text-base"
           >
-            Take Another Quiz
+            Retake Quiz
           </button>
         </div>
       </div>

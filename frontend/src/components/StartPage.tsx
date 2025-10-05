@@ -1,22 +1,50 @@
 import { CheckCircle, RotateCcw } from 'lucide-react';
-import { useUserStore } from '../store/useTestStore';
+import { useUserStore, useQuestionStore,useTestStore } from '../store/useTestStore';
 import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { handleRetake } from '../lib/utils';
 
 export const StartPage: React.FC = () => {
-    const { userEmail, userName, setUserEmail, setUserName } = useUserStore();
+    const { userEmail, userName, setUserEmail, setUserName,setUserId } = useUserStore();
+    const { setQuestions,setScore ,score,questions} = useQuestionStore()
+    const { resetAnswers} = useTestStore()
     const [showResult, setShowResult] = useState(false);
+    const navigate = useNavigate();
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (userEmail && userName) {
-            handleStartQuiz(userEmail, userName);
-            setShowResult(true);
+            try {
+                const response = await axios.get("http://localhost:3000/test/user-info", {
+                    params: {
+                        email: userEmail,
+                        name: userName,
+                    },
+                });
+
+                const data = response.data;
+                setUserId(data.user.id)
+
+                const questionsArray = data.questions.map((q:any) => ({
+                    ...q,
+                    options: JSON.parse(q.options),
+                }));
+                setQuestions(questionsArray)
+                console.log(data)
+                if (data.userExists === true) {
+                    setScore(data.user.quiz?.score)
+                    setShowResult(true);
+                } else {
+                    navigate("/quiz");
+                }
+
+            } catch (error) {
+                console.log("error fetching user", error);
+            }
         }
     };
 
-    const handleStartQuiz = (email: string, name: string) => {
-        console.log('email', email);
-        console.log('name', name);
-    };
+    const onRetake=()=> handleRetake(userEmail, userName, navigate,resetAnswers)
 
     return (
         <div className="min-h-screen w-full bg-gray-50 [background-image:radial-gradient(#c7d2fe_2px,transparent_2px)] [background-size:24px_24px] flex items-center justify-center">
@@ -87,30 +115,31 @@ export const StartPage: React.FC = () => {
                     </div>
                 ) : (
                     <div className="flex-1 flex flex-col justify-center">
-                        {/* Results Section */}
                         <div className="px-8 py-8 bg-gradient-to-br from-emerald-50 to-green-100 rounded-2xl text-center border border-green-200 shadow-xl">
 
-                            {/* Status badge */}
+                         
                             <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-green-200 text-green-900 font-semibold mb-4 shadow-sm">
                                 <span className="w-2 h-2 rounded-full bg-green-500"></span>
                                 Test Completed
                             </div>
 
-                            {/* Heading */}
+                         
                             <h2 className="text-2xl font-bold text-gray-900 mb-2">
                                 Test already taken
                             </h2>
 
-                            {/* Score section */}
+                         
                             <div className="flex flex-col items-center mb-6">
                                 <p className="text-gray-700 font-medium text-lg mb-2">Your Score</p>
                                 <div className="relative w-24 h-24 flex items-center justify-center rounded-full bg-gradient-to-tr from-green-300 to-emerald-500 text-white font-bold text-2xl shadow-md">
-                                    7/10
+                                    {score}/{questions.length}
                                 </div>
                             </div>
 
-                            {/* Actions */}
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center"
+                              onClick={onRetake}
+                            >
                                 <button className="flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md text-lg">
                                     <RotateCcw size={20} />
                                     Retake Test
