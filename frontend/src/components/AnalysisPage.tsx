@@ -1,20 +1,20 @@
 import React from 'react';
 import { CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useQuestionStore,useTestStore,useUserStore } from '../store/useTestStore';
+import { useQuestionStore, useTestStore, useUserStore } from '../store/useTestStore';
 import { handleRetake } from '../lib/utils';
 
 
 export const AnalysisPage: React.FC = () => {
-  const {questions} =useQuestionStore()
-  const {userEmail,userName} =useUserStore()
-  const {answers,resetAnswers} =useTestStore()
-  const navigate=useNavigate()
-  const onRetake=()=> handleRetake(userEmail, userName, navigate,resetAnswers)
+  const { questions, setQuestions } = useQuestionStore()
+  const { userEmail, userName } = useUserStore()
+  const { answers, resetAnswers, setCurrentQuestion } = useTestStore()
+  const navigate = useNavigate()
+  const onRetake = () => handleRetake(userEmail, userName, navigate, resetAnswers, setQuestions, setCurrentQuestion)
   return (
-    <div className="min-h-screen bg-gray-50 p-3 sm:p-4 md:p-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-emerald-50 p-3 sm:p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4 sm:mb-6">
+        <div className="bg-white rounded-3xl shadow-md p-4 sm:p-6 mb-4 sm:mb-6">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Question Analysis</h1>
           <p className="text-sm sm:text-base text-gray-600">Review your answers and correct solutions</p>
         </div>
@@ -26,7 +26,7 @@ export const AnalysisPage: React.FC = () => {
             const isAttempted = userAnswer !== undefined;
 
             return (
-              <div key={question.id} className="bg-white rounded-lg shadow-md p-4 sm:p-6">
+              <div key={question.id} className="bg-white rounded-xl shadow-md p-4 sm:p-6">
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 gap-2 sm:gap-0">
                   <h3 className="text-base sm:text-xl font-semibold text-gray-800 flex-1">
                     {qIndex + 1}. {question.text}
@@ -59,13 +59,12 @@ export const AnalysisPage: React.FC = () => {
                     return (
                       <div
                         key={oIndex}
-                        className={`p-3 sm:p-4 rounded-lg border-2 ${
-                          isCorrectAnswer
+                        className={`p-3 sm:p-4 rounded-lg border-2 ${isCorrectAnswer
                             ? 'border-green-500 bg-green-50'
                             : isUserAnswer
-                            ? 'border-red-500 bg-red-50'
-                            : 'border-gray-200 bg-gray-50'
-                        }`}
+                              ? 'border-red-500 bg-red-50'
+                              : 'border-gray-200 bg-gray-50'
+                          }`}
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <span className="text-sm sm:text-base text-gray-800">{option}</span>
@@ -93,7 +92,7 @@ export const AnalysisPage: React.FC = () => {
 
         <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
           <button
-            onClick={()=> {navigate("/result")}}
+            onClick={() => { navigate("/result") }}
             className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 text-sm sm:text-base"
           >
             Back to Results

@@ -13,11 +13,11 @@ export const beginQuiz = async (req: Request, res: Response) => {
     try {
         const user: User | null = await prisma.user.findUnique({
             where: { email: email as string },
-            include:{
-                quiz:true
+            include: {
+                quiz: true
             }
         });
-        
+
 
         const questions = await prisma.question.findMany({
             select: {
@@ -26,12 +26,11 @@ export const beginQuiz = async (req: Request, res: Response) => {
                 options: true,
             }
         });
-        // console.log(questions);
         // await prisma.user.deleteMany();
-        const user1 = await prisma.user.findMany()
-        const quiz1 = await prisma.quiz.findMany()
-        console.log(user1);
-        console.log(quiz1);
+        // const user1 = await prisma.user.findMany()
+        // const quiz1 = await prisma.quiz.findMany()
+        // console.log(user1);
+        // console.log(quiz1);
 
         if (user === null) {
             const newUser = await prisma.user.create({
@@ -45,7 +44,7 @@ export const beginQuiz = async (req: Request, res: Response) => {
             return res.status(201).json({
                 success: true,
                 userExists: false,
-                user:newUser,
+                user: newUser,
                 questions,
                 message: "New user created. You can start the quiz.",
             });
@@ -88,7 +87,13 @@ export const retakeQuiz = async (req: Request, res: Response) => {
             }
         })
 
-        const questions = prisma.question.findMany();
+        const questions = await prisma.question.findMany({
+            select: {
+                id: true,
+                text: true,
+                options: true,
+            }
+        });
 
         return res.status(201).json({
             success: true,

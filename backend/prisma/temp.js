@@ -61,27 +61,27 @@
 //     await prisma.$disconnect();
 //   });
 
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+// import { PrismaClient } from "@prisma/client";
+// const prisma = new PrismaClient();
 
-async function getAllQuestions() {
-  const questions = await prisma.question.findMany();
+// async function getAllQuestions() {
+//   const questions = await prisma.question.findMany();
 
-  // Parse options from JSON string
-  const formattedQuestions = questions.map(q => ({
-    id: q.id,
-    text: q.text,
-    options: JSON.parse(q.options), // convert string back to array
-    answer: q.answer,
-  }));
+//   // Parse options from JSON string
+//   const formattedQuestions = questions.map(q => ({
+//     id: q.id,
+//     text: q.text,
+//     options: JSON.parse(q.options), // convert string back to array
+//     answer: q.answer,
+//   }));
 
-  console.log(formattedQuestions);
-  return formattedQuestions;
-}
+//   console.log(formattedQuestions);
+//   return formattedQuestions;
+// }
 
-getAllQuestions()
-  .catch(e => console.error(e))
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+// getAllQuestions()
+//   .catch(e => console.error(e))
+//   .finally(async () => {
+//     await prisma.$disconnect();
+//   });
 
