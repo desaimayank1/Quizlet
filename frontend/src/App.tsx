@@ -8,9 +8,9 @@ import { Protected } from './components/Protected';
 
 const router = createBrowserRouter([
   { path: "/", element: <StartPage /> },
-  { path: "/quiz", element:<Protected><QuizPage /></Protected>  },
+  { path: "/quiz", element: <Protected><QuizPage /></Protected> },
   { path: "/result", element: <Protected><ResultPage /></Protected> },
-  { path: "/analysis", element:<Protected><AnalysisPage /></Protected>  },
+  { path: "/analysis", element: <Protected><AnalysisPage /></Protected> },
 ]);
 
 
