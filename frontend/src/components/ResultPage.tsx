@@ -1,89 +1,88 @@
 import React from 'react';
-import { CheckCircle, AlertCircle } from 'lucide-react';
-import { useQuestionStore,useTestStore,useUserStore } from '../store/useTestStore';
+import { CheckCircle } from 'lucide-react';
+import { useQuestionStore, useTestStore, useUserStore } from '../store/useTestStore';
 import { useNavigate } from 'react-router-dom';
 import { handleRetake } from '../lib/utils';
 
 export const ResultPage: React.FC = () => {
-  const { score, questions } = useQuestionStore()
-  const { userEmail, userName } = useUserStore()
-  const { answers,resetAnswers } = useTestStore()
-  const totalQuestions = questions.length
+  const { score, questions, setQuestions } = useQuestionStore();
+  const { userEmail, userName } = useUserStore();
+  const { answers, resetAnswers, setCurrentQuestion } = useTestStore();
+  const totalQuestions = questions.length;
   const percentage = (score / totalQuestions) * 100;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-
-  const handleOnAnalysis = () => {
-    navigate("/analysis");
-  };
-
- const attemptedCount = (): number => {
-    return Object.keys(answers).length;
-  };
- 
-  const onRetake=()=> handleRetake(userEmail, userName, navigate,resetAnswers)
+  const handleOnAnalysis = () => navigate("/analysis");
+  const onRetake = () => handleRetake(userEmail, userName, navigate, resetAnswers, setQuestions, setCurrentQuestion);
+  const attemptedCount = (): number => Object.keys(answers).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 max-w-2xl w-full">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-emerald-50 px-4 py-8">
+      <div className="bg-white shadow-lg rounded-3xl w-full max-w-2xl flex flex-col justify-between p-6 sm:p-8 md:p-10">
+
         <div className="text-center mb-6 sm:mb-8">
-          <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center mx-auto mb-4 ${percentage >= 70 ? 'bg-green-100' : percentage >= 40 ? 'bg-yellow-100' : 'bg-red-100'
-            }`}>
-            {percentage >= 70 ? (
-              <CheckCircle className="text-green-600" size={40} />
-            ) : (
-              <AlertCircle className={percentage >= 40 ? 'text-yellow-600' : 'text-red-600'} size={40} />
-            )}
+          <div
+            className={`w-20 h-20 sm:w-24 sm:h-24 mx-auto flex items-center justify-center rounded-full shadow-sm mb-4 ${percentage >= 70
+                ? 'bg-green-50 text-green-600'
+                : percentage >= 20
+                  ? 'bg-yellow-50 text-yellow-600'
+                  : 'bg-red-50 text-red-600'
+              }`}
+          >
+            <CheckCircle size={40} className="sm:w-10 sm:h-10" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Quiz Completed!</h1>
-          <p className="text-sm sm:text-base text-gray-600">Here are your results</p>
+
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1">Quiz Completed!</h1>
+          <p className="text-gray-500 text-sm sm:text-base">Here are your results summary</p>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
-          <div className="bg-indigo-50 p-4 sm:p-6 rounded-lg text-center">
-            <p className="text-xs sm:text-sm text-gray-600 mb-2">Your Score</p>
-            <p className="text-3xl sm:text-4xl font-bold text-indigo-600">
-              {score}/{totalQuestions}
-            </p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 mb-6 sm:mb-8">
+          <div className="text-center">
+            <p className="text-gray-500 text-xs sm:text-sm mb-1">Your Score</p>
+            <p className="text-4xl sm:text-5xl font-extrabold text-indigo-600">{score}/{totalQuestions}</p>
           </div>
-          <div className="bg-blue-50 p-4 sm:p-6 rounded-lg text-center">
-            <p className="text-xs sm:text-sm text-gray-600 mb-2">Percentage</p>
-            <p className="text-3xl sm:text-4xl font-bold text-blue-600">{percentage.toFixed(0)}%</p>
+          <div className="hidden sm:block h-10 w-[1px] bg-gray-200" />
+          <div className="text-center">
+            <p className="text-gray-500 text-xs sm:text-sm mb-1">Percentage</p>
+            <p className="text-4xl sm:text-5xl font-extrabold text-blue-600">{percentage.toFixed(0)}%</p>
           </div>
         </div>
 
-        <div className="space-y-3 mb-6 sm:mb-8">
-          <div className="flex justify-between items-center p-3 sm:p-4 bg-gray-50 rounded-lg">
-            <span className="text-sm sm:text-base text-gray-700">Correct Answers</span>
-            <span className="font-bold text-green-600 text-sm sm:text-base">{score}</span>
+        <div className="border-t border-gray-100 my-3 sm:my-4" />
+
+        <div className="text-gray-700 text-sm sm:text-base space-y-2 sm:space-y-3">
+          <div className="flex justify-between bg-gray-100 rounded-2xl px-3 items-center py-1 sm:py-2">
+            <span>Correct Answers</span>
+            <span className="font-semibold text-green-600">{score}</span>
           </div>
-          <div className="flex justify-between items-center p-3 sm:p-4 bg-gray-50 rounded-lg">
-            <span className="text-sm sm:text-base text-gray-700">Wrong Answers</span>
-            <span className="font-bold text-red-600 text-sm sm:text-base">
-              {attemptedCount() - score}
-            </span>
+          <div className="flex justify-between bg-gray-100 rounded-2xl px-3 items-center py-1 sm:py-2">
+            <span>Wrong Answers</span>
+            <span className="font-semibold  text-red-600">{attemptedCount() - score}</span>
           </div>
-          <div className="flex justify-between items-center p-3 sm:p-4 bg-gray-50 rounded-lg">
-            <span className="text-sm sm:text-base text-gray-700">Unattempted</span>
-            <span className="font-bold text-gray-600 text-sm sm:text-base">
+          <div className="flex justify-between bg-gray-100 rounded-2xl px-3 items-center py-1 sm:py-2">
+            <span>Unattempted</span>
+            <span className="font-semibold text-gray-600">
               {totalQuestions - attemptedCount()}
             </span>
           </div>
         </div>
 
-        <button
-          onClick={handleOnAnalysis}
-          className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 mb-3 sm:mb-4 text-sm sm:text-base"
-        >
-          Analyze Questions
-        </button>
+        <div className="border-t border-gray-100 my-4" />
 
-        <button
-          onClick={onRetake}
-          className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 text-sm sm:text-base"
-        >
-          Retake  Quiz
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 mt-2">
+          <button
+            onClick={handleOnAnalysis}
+            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-semibold text-sm sm:text-base transition-all shadow-sm hover:shadow-md"
+          >
+            Analyze Questions
+          </button>
+          <button
+            onClick={onRetake}
+            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 rounded-xl font-semibold text-sm sm:text-base transition-all shadow-sm hover:shadow-md"
+          >
+            Retake Quiz
+          </button>
+        </div>
       </div>
     </div>
   );

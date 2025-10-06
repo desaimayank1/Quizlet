@@ -9,8 +9,8 @@ interface ProtectedProps {
 export const Protected: React.FC<ProtectedProps> = ({ children }) => {
   const { userEmail } = useUserStore();
 
-  if(!userEmail){
-     return <Navigate to="/" replace />;
+  if (!userEmail) {
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
