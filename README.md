@@ -13,9 +13,20 @@ State management on the frontend is handled using **Zustand**.
 
 ### 1. Clone the repository
 ```bash
-git clone <your-repo-link>
-cd <repo-folder>
+git clone https://github.com/desaimayank1/Quizlet.git
+cd Quizlet
+```
 
+The repository structure will look like this:
+```bash
+Quizlet/
+├── backend/        # Node.js backend code
+├── frontend/       # React frontend code
+├── README.md
+```
+
+2. Install dependencies
+```bash
 # For backend
 cd backend
 npm install
@@ -23,10 +34,16 @@ npm install
 # For frontend
 cd ../frontend
 npm install
+```
 
+3. Set up the database
+```bash
 cd ../backend
 npx prisma migrate dev --name new
+```
 
+4. Run the application
+```bash
 # Start backend
 cd backend
 npm run dev
@@ -34,7 +51,13 @@ npm run dev
 # Start frontend
 cd ../frontend
 npm run dev
+# Runs the frontend at http://localhost:5173.
+```
 
-# Run testcases 
+5. Run tests
+```bash
 cd backend
 npm test
+```
+
+
